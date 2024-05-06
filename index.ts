@@ -1,6 +1,8 @@
 import express from "express";
-import router from "./routes";
+import authRouter from "./routes/auth";
 import prisma from "./utils/db";
+import { handleCheckingAuth } from "./middleware/auth";
+import userRouter from "./routes/user";
 
 const app = express();
 
@@ -12,7 +14,8 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", router);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", handleCheckingAuth, userRouter);
 
 const start = async () => {
   try {
