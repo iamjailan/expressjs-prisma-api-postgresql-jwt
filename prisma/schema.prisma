@@ -16,17 +16,3 @@ model Users {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-enum GENDER {
-  male
-  female
-  other
-}
-
-model Customers {
-  id       String @id @default(uuid())
-  name     String
-  age      Int
-  location String
-  gender   GENDER @default(other)
-}
