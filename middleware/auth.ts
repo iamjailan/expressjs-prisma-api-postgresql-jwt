@@ -12,7 +12,7 @@ interface RequestWithUser extends Request {
 }
 
 export const handleCheckingAuth = async (
-  req: RequestWithUser,
+  req,
   res: Response,
   next: NextFunction
 ) => {

@@ -3,6 +3,7 @@ import authRouter from "./routes/auth";
 import prisma from "./utils/db";
 import { handleCheckingAuth } from "./middleware/auth";
 import userRouter from "./routes/user";
+import postRouter from "./routes/post";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", handleCheckingAuth, userRouter);
+app.use("/api/v1/post", handleCheckingAuth, postRouter);
 
 const start = async () => {
   try {
