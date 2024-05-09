@@ -49,7 +49,8 @@ export const handleLogin = async (req, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { user_name, last_name, password, email }: Users = req.body;
+  const { user_name, last_name, password, email, image, age, gender }: Users =
+    req.body;
   let errorCode = 400;
   try {
     if (!user_name || !last_name || !password || !email) {
@@ -76,6 +77,9 @@ export const createUser = async (req: Request, res: Response) => {
         last_name: last_name,
         password: hashedPassword,
         email: email,
+        image: image,
+        gender,
+        age,
       },
     });
 

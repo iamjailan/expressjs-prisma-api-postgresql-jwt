@@ -2,15 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../utils/db";
 
-interface User {
-  id: string;
-  user_name: string;
-}
-
-interface RequestWithUser extends Request {
-  user: User | null;
-}
-
 export const handleCheckingAuth = async (
   req,
   res: Response,
@@ -33,7 +24,6 @@ export const handleCheckingAuth = async (
         id: true,
         last_name: true,
         user_name: true,
-        email: true,
       },
     });
     req.user = user;

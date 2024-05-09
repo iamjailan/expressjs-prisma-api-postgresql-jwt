@@ -35,7 +35,8 @@ export const getSingleUser = async (req, res: Response) => {
 };
 
 export const updateUser = async (req, res: Response) => {
-  const { last_name, password, user_name, email }: Users = req.body;
+  const { last_name, password, user_name, email, image, age, gender }: Users =
+    req.body;
   const userId = req.user.id;
   let statusCode = 400;
   try {
@@ -45,7 +46,7 @@ export const updateUser = async (req, res: Response) => {
       throw new Error(`User not found with ID:${userId}`);
     }
 
-    if (password.length < 8) {
+    if (!password && password.length < 8) {
       throw new Error("Password should be more then 8 words");
     }
 
@@ -59,6 +60,9 @@ export const updateUser = async (req, res: Response) => {
         password: hashedPassword,
         user_name: user_name,
         email: email,
+        image: image,
+        age,
+        gender,
       },
     });
 

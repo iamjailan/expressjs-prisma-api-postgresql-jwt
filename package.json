@@ -7,7 +7,9 @@
     "dev": "nodemon index.ts",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate dev",
-    "studio": "npx prisma studio"
+    "studio": "npx prisma studio",
+    "prisma:show": "npx prisma migrate status",
+    "prisma:deploy": "npx prisma migrate deploy"
   },
   "author": "",
   "license": "ISC",
