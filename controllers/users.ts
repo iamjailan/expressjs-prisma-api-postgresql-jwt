@@ -1,34 +1,70 @@
 import { Users } from "@prisma/client";
 import prisma from "../utils/db";
 import bcrypt from "bcrypt";
-import { Request, Response } from "express";
+import { Response } from "express";
+import createObjectFromArray from "../utils/createObjectFromArray";
 
-export const getAllUser = async (req: Request, res: Response) => {
-  const users = await prisma.users.findMany();
+export const getAllUser = async (req, res: Response) => {
+  const limit = req.query.limit ? Number(req.query.limit) : 10;
+  const offset = req.query.offset ? Number(req.query.offset) : 0;
+  const order_by: string = req.query.order_by ? req.query.order_by : "id";
+  const sort_by: "asc" | "desc" = req.query.sort_by ? req.query.sort_by : "asc";
 
-  const filteredUser = users.map((user) => {
-    return {
-      name: user.user_name,
-      last_name: user.last_name,
-    };
-  });
+  try {
+    const fields: string[] = ["id", "user_name", "last_name", "age"];
 
-  res.status(200).json({ success: true, data: filteredUser });
+    if (!fields.includes(order_by)) {
+      throw new Error(`${order_by} does
+    not exist`);
+    }
+
+    const [users, count] = await prisma.$transaction([
+      prisma.users.findMany({
+        take: limit,
+        skip: offset * limit,
+        select: createObjectFromArray(fields),
+        orderBy: createObjectFromArray([order_by], sort_by),
+      }),
+      prisma.users.count(),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: users,
+      limit: limit,
+      offset: offset,
+      count: count,
+    });
+  } catch (error: any) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 export const getSingleUser = async (req, res: Response) => {
   let statusCode = 400;
   const userId = req.user.id;
 
+  const fields: string[] = [
+    "id",
+    "createdAt",
+    "updatedAt",
+    "user_name",
+    "last_name",
+    "age",
+    "gender",
+  ];
+
   try {
-    const user = await prisma.users.findUnique({ where: { id: userId } });
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      select: createObjectFromArray(fields),
+    });
     if (!user) {
       statusCode = 404;
       throw new Error(`User not found with ID:${userId}`);
     }
-    const { password, ...returnUser } = user;
 
-    res.status(200).json({ success: true, data: returnUser });
+    res.status(200).json({ success: true, data: user });
   } catch (error) {
     res.status(statusCode).json({ success: false, message: error.message });
   }

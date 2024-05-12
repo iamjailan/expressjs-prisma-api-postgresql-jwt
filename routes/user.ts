@@ -9,6 +9,6 @@ import {
 const userRouter = express.Router();
 
 userRouter.route("/").get(getSingleUser).put(updateUser).delete(deleteUser);
-userRouter.route("/getAllUsers").get(getSingleUser);
+userRouter.route("/getAllUsers").get(getAllUser);
 
 export default userRouter;

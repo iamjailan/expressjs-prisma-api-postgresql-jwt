@@ -1,28 +1,34 @@
 import { Request, Response } from "express";
 import prisma from "../utils/db";
 import { Post } from "@prisma/client";
+import createObjectFromArray from "../utils/createObjectFromArray";
 
-export const getAllPost = async (req: Request, res: Response) => {
+export const getAllPost = async (req, res: Response) => {
   const limit = req.query.limit ? Number(req.query.limit) : 10;
   const offset = req.query.offset ? Number(req.query.offset) : 0;
+  const order_by: string = req.query.order_by ? req.query.order_by : "id";
+  const sort_by: "asc" | "desc" = req.query.sort_by ? req.query.sort_by : "asc";
+
+  const fields: string[] = ["id", "title", "description", "images"];
   try {
     const [posts, count] = await prisma.$transaction([
       prisma.post.findMany({
         take: limit,
         skip: offset * limit,
+        orderBy: createObjectFromArray([order_by], sort_by),
+        select: createObjectFromArray(fields),
       }),
+
       prisma.post.count(),
     ]);
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: posts,
-        limit: limit,
-        offset: offset,
-        count: count,
-      });
+    res.status(200).json({
+      success: true,
+      data: posts,
+      limit: limit,
+      offset: offset,
+      count: count,
+    });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
