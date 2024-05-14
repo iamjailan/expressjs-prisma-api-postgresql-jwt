@@ -9,8 +9,19 @@ export const getAllPost = async (req, res: Response) => {
   const order_by: string = req.query.order_by ? req.query.order_by : "id";
   const sort_by: "asc" | "desc" = req.query.sort_by ? req.query.sort_by : "asc";
 
-  const fields: string[] = ["id", "title", "description", "images"];
+  const fields: string[] = [
+    "id",
+    "title",
+    "description",
+    "images",
+    "createdAt",
+    "updatedAt",
+  ];
+
   try {
+    if (!fields.includes(order_by)) {
+      throw new Error(`${order_by} fields does not exit in table`);
+    }
     const [posts, count] = await prisma.$transaction([
       prisma.post.findMany({
         take: limit,

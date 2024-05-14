@@ -34,6 +34,6 @@ model Post {
   usersId     String
   Users       Users    @relation(fields: [usersId], references: [id])
   createdAt   DateTime @default(now())
-  upatedAt    DateTime @updatedAt
+  updatedAt   DateTime @updatedAt
   images      String[]
 }
