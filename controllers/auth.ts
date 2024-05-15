@@ -49,8 +49,17 @@ export const handleLogin = async (req, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { user_name, last_name, password, email, image, age, gender }: Users =
-    req.body;
+  const {
+    user_name,
+    last_name,
+    password,
+    email,
+    image,
+    age,
+    gender,
+    city,
+    country,
+  }: Users = req.body;
   let errorCode = 400;
   try {
     if (!user_name || !last_name || !password || !email) {
@@ -80,6 +89,8 @@ export const createUser = async (req: Request, res: Response) => {
         image: image,
         gender,
         age,
+        city,
+        country,
       },
     });
 

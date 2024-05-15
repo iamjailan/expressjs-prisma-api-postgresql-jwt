@@ -13,6 +13,14 @@ enum GENDER {
   other
 }
 
+enum STATUS {
+  completed
+  pending
+  not_started
+  canceled
+  progress
+}
+
 model Users {
   id        String   @id @default(uuid())
   user_name String
@@ -25,6 +33,9 @@ model Users {
   gender    GENDER?
   age       Int?
   image     String?
+  country   String?
+  city      String?
+  Tasks     Tasks[]
 }
 
 model Post {
@@ -36,4 +47,16 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   images      String[]
+}
+
+model Tasks {
+  id          String   @id @default(uuid())
+  User        Users    @relation(fields: [usersId], references: [id])
+  status      STATUS   @default(not_started)
+  title       String
+  description String
+  deadline    DateTime
+  usersId     String
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
 }

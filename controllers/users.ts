@@ -11,7 +11,14 @@ export const getAllUser = async (req, res: Response) => {
   const sort_by: "asc" | "desc" = req.query.sort_by ? req.query.sort_by : "asc";
 
   try {
-    const fields: string[] = ["id", "user_name", "last_name", "age"];
+    const fields: string[] = [
+      "id",
+      "user_name",
+      "last_name",
+      "country",
+      "city",
+      "image",
+    ];
 
     if (!fields.includes(order_by)) {
       throw new Error(`${order_by} does
@@ -52,6 +59,9 @@ export const getSingleUser = async (req, res: Response) => {
     "last_name",
     "age",
     "gender",
+    "city",
+    "country",
+    "image",
   ];
 
   try {
@@ -71,8 +81,17 @@ export const getSingleUser = async (req, res: Response) => {
 };
 
 export const updateUser = async (req, res: Response) => {
-  const { last_name, password, user_name, email, image, age, gender }: Users =
-    req.body;
+  const {
+    last_name,
+    password,
+    user_name,
+    email,
+    image,
+    age,
+    gender,
+    city,
+    country,
+  }: Users = req.body;
   const userId = req.user.id;
   let statusCode = 400;
   try {
@@ -99,6 +118,8 @@ export const updateUser = async (req, res: Response) => {
         image: image,
         age,
         gender,
+        country,
+        city,
       },
     });
 

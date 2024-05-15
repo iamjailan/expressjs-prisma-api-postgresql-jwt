@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../utils/db";
 
@@ -10,7 +10,7 @@ export const handleCheckingAuth = async (
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+    return res.status(401).send("Unauthorized");
   }
 
   const token = authHeader.split(" ")[1];
@@ -34,6 +34,6 @@ export const handleCheckingAuth = async (
     };
     next();
   } catch (error) {
-    res.status(401).json({ success: false, message: "Authentication Invalid" });
+    res.status(401).send("Authentication Invalid");
   }
 };
