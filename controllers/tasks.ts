@@ -44,6 +44,23 @@ export const getAllTasks = async (req, res: Response) => {
   }
 };
 
+export const getTaskById = async (req, res: Response) => {
+  const id = req.params.id;
+  let errorCode = 400;
+  try {
+    const task = await prisma.tasks.findUnique({ where: { id: id } });
+
+    if (!task) {
+      errorCode = 404;
+      throw new Error(`task with given id:${id} not found`);
+    }
+
+    res.status(200).json({ success: true, data: task });
+  } catch (error) {
+    res.status(errorCode).json({ success: false, message: error.message });
+  }
+};
+
 export const getTasksByCustomer = async (req, res: Response) => {
   const userId = req.user.id;
   let errorCode = 400;
@@ -60,7 +77,38 @@ export const getTasksByCustomer = async (req, res: Response) => {
     "title",
     "description",
     "deadline",
+    "User.id",
   ];
+
+  function createSelectObject(fields) {
+    return fields.reduce((acc, field) => {
+      if (field.includes(".")) {
+        const [model, nestedField] = field.split(".");
+        if (!acc[model]) acc[model] = {};
+        acc[model][nestedField] = true;
+      } else {
+        acc[field] = true;
+      }
+      return acc;
+    }, {});
+  }
+
+  const validOrderByFields = fields.map((field) =>
+    field.includes(".") ? field.split(".")[0] : field
+  );
+  if (
+    !validOrderByFields.includes(
+      orderBy.includes(".") ? orderBy.split(".")[0] : orderBy
+    )
+  ) {
+    const errorCode = 433;
+    throw new Error(`${orderBy} field not found in table!`);
+  }
+
+  const selectObject = createSelectObject(fields);
+  const includeObject = fields.includes("User.id")
+    ? { User: { select: { id: true } } }
+    : {};
 
   try {
     if (!fields.includes(orderBy)) {
@@ -72,7 +120,7 @@ export const getTasksByCustomer = async (req, res: Response) => {
         where: { usersId: userId },
         take: limit,
         skip: offset * limit,
-        select: createObjectFromArray(fields),
+        select: selectObject,
         orderBy: createObjectFromArray([orderBy], sort_by),
       }),
       prisma.tasks.count(),
@@ -131,6 +179,27 @@ export const updateTask = async (req, res: Response) => {
       },
     });
     res.status(201).json({ success: true, data: updateTask });
+  } catch (error) {
+    res.status(errorCode).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteTaskBy = async (req, res: Response) => {
+  const id = req.params.id;
+  let errorCode = 400;
+  try {
+    const task = await prisma.tasks.findUnique({ where: { id: id } });
+
+    if (!task) {
+      errorCode = 404;
+      throw new Error(`task with given id:${id} not found`);
+    }
+
+    await prisma.tasks.delete({ where: { id: id } });
+
+    res
+      .status(200)
+      .json({ success: true, message: "task deleted successfully" });
   } catch (error) {
     res.status(errorCode).json({ success: false, message: error.message });
   }
