@@ -77,38 +77,7 @@ export const getTasksByCustomer = async (req, res: Response) => {
     "title",
     "description",
     "deadline",
-    "User.id",
   ];
-
-  function createSelectObject(fields) {
-    return fields.reduce((acc, field) => {
-      if (field.includes(".")) {
-        const [model, nestedField] = field.split(".");
-        if (!acc[model]) acc[model] = {};
-        acc[model][nestedField] = true;
-      } else {
-        acc[field] = true;
-      }
-      return acc;
-    }, {});
-  }
-
-  const validOrderByFields = fields.map((field) =>
-    field.includes(".") ? field.split(".")[0] : field
-  );
-  if (
-    !validOrderByFields.includes(
-      orderBy.includes(".") ? orderBy.split(".")[0] : orderBy
-    )
-  ) {
-    const errorCode = 433;
-    throw new Error(`${orderBy} field not found in table!`);
-  }
-
-  const selectObject = createSelectObject(fields);
-  const includeObject = fields.includes("User.id")
-    ? { User: { select: { id: true } } }
-    : {};
 
   try {
     if (!fields.includes(orderBy)) {
@@ -120,7 +89,7 @@ export const getTasksByCustomer = async (req, res: Response) => {
         where: { usersId: userId },
         take: limit,
         skip: offset * limit,
-        select: selectObject,
+        select: createObjectFromArray(fields),
         orderBy: createObjectFromArray([orderBy], sort_by),
       }),
       prisma.tasks.count(),

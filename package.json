@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon index.ts",
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
     "dev": "nodemon index.ts",
     "prisma:migrate": "npx prisma migrate dev --name",
-    "prisma:generate": "npx prisma generate dev",
+    "prisma:generate": "npx prisma generate",
     "studio": "npx prisma studio",
     "prisma:show": "npx prisma migrate status",
     "prisma:deploy": "npx prisma migrate deploy"
