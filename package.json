@@ -1,10 +1,9 @@
 {
   "name": "express",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node index.js",
+    "start": "npm run build && ts-node index.ts",
     "dev": "nodemon index.ts",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
