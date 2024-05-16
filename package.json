@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && ts-node index.ts",
+    "start": "npm run build && node index.js",
     "dev": "nodemon index.ts",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
