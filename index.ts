@@ -5,6 +5,7 @@ import { handleCheckingAuth } from "./middleware/auth";
 import userRouter from "./routes/user";
 import postRouter from "./routes/post";
 import notFound from "./middleware/notFount";
+import taskRouter from "./routes/tasks";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", handleCheckingAuth, userRouter);
 app.use("/api/v1/post", postRouter);
+app.use("/api/v1/task", taskRouter);
 
 app.use(notFound);
 

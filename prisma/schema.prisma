@@ -21,20 +21,57 @@ enum STATUS {
   progress
 }
 
+enum ProvinceEnum {
+  badakhshan
+  badghis
+  baghlan
+  balkh
+  bamyan
+  daykundi
+  farah
+  faryab
+  ghazn
+  ghor
+  helmand
+  herat
+  jowzjan
+  kabul
+  kandahar
+  kapisa
+  khost
+  kunar
+  kunduz
+  laghman
+  logar
+  nangarhar
+  nimroz
+  nuristan
+  panjshir
+  parwan
+  paktia
+  paktika
+  samangan
+  sar_e_pol
+  takhar
+  uruzgan
+  wardak
+  zabul
+}
+
 model Users {
-  id        String   @id @default(uuid())
+  id        String        @id @default(uuid())
   user_name String
   last_name String
-  email     String   @unique
+  email     String        @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
   Post      Post[]
   gender    GENDER?
   age       Int?
   image     String?
   country   String?
-  city      String?
+  city      ProvinceEnum?
   Tasks     Tasks[]
 }
 
