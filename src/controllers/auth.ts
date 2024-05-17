@@ -1,4 +1,3 @@
-import { Users } from "@prisma/client";
 import prisma from "../utils/db";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -7,7 +6,7 @@ import { Request, Response } from "express";
 export const handleLogin = async (req, res: Response) => {
   let statusCode = 400;
   try {
-    const { email, password }: Users = req.body;
+    const { email, password } = req.body;
 
     if (!email || !password) {
       throw new Error("Please Provide user Email and Password");
@@ -59,7 +58,7 @@ export const createUser = async (req: Request, res: Response) => {
     gender,
     city,
     country,
-  }: Users = req.body;
+  } = req.body;
   let errorCode = 400;
   try {
     if (!user_name || !last_name || !password || !email) {
@@ -80,7 +79,7 @@ export const createUser = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user: Users = await prisma.users.create({
+    const user = await prisma.users.create({
       data: {
         user_name: user_name,
         last_name: last_name,

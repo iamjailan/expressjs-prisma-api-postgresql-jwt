@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../utils/db";
 import createObjectFromArray from "../utils/createObjectFromArray";
-import { Tasks } from "@prisma/client";
 
 export const getAllTasks = async (req, res: Response) => {
   const limit: number = req.query.limit ? parseInt(req.query.limit) : 10;
@@ -110,7 +109,7 @@ export const getTasksByCustomer = async (req, res: Response) => {
 export const createTasks = async (req, res: Response) => {
   let errorCode = 400;
   const userId = req.user.id;
-  const { deadline, description, status, title }: Tasks = req.body;
+  const { deadline, description, status, title } = req.body;
   try {
     if (!description || !title || !deadline) {
       throw new Error("Please description, title, and deadline of the task");
@@ -128,7 +127,7 @@ export const createTasks = async (req, res: Response) => {
 
 export const updateTask = async (req, res: Response) => {
   let errorCode = 400;
-  const { deadline, description, status, title }: Tasks = req.body;
+  const { deadline, description, status, title } = req.body;
   const id: string = req.params.id;
   try {
     const task = await prisma.tasks.findUnique({ where: { id: id } });

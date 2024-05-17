@@ -1,4 +1,3 @@
-import { Users } from "@prisma/client";
 import prisma from "../utils/db";
 import bcrypt from "bcrypt";
 import { Response } from "express";
@@ -91,7 +90,7 @@ export const updateUser = async (req, res: Response) => {
     gender,
     city,
     country,
-  }: Users = req.body;
+  } = req.body;
   const userId = req.user.id;
   let statusCode = 400;
   try {

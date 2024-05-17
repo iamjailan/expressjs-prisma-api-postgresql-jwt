@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import prisma from "../utils/db";
-import { Post } from "@prisma/client";
 import createObjectFromArray from "../utils/createObjectFromArray";
 
 export const getAllPost = async (req, res: Response) => {
@@ -46,7 +45,7 @@ export const getAllPost = async (req, res: Response) => {
 };
 
 export const createPost = async (req, res: Response) => {
-  const { description, title, images }: Post = req.body;
+  const { description, title, images } = req.body;
   const userId = req.user.id;
 
   try {
@@ -127,7 +126,7 @@ export const getPostById = async (req: Request, res: Response) => {
 };
 
 export const updatePostById = async (req: Request, res: Response) => {
-  const { description, title, images }: Post = req.body;
+  const { description, title, images } = req.body;
   const postId = req.params.id;
   let statusCode = 400;
 
