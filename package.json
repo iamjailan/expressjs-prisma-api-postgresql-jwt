@@ -3,19 +3,15 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "postinstall": "npx prisma generate",
+    "build": "tsc && npx prisma generate",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "prisma:migrate": "npx prisma migrate dev --name",
     "prisma:generate": "npx prisma generate",
     "studio": "npx prisma studio",
     "prisma:show": "npx prisma migrate status",
-    "prisma:deploy": "npx prisma migrate deploy",
-    "generate": "npx prisma generate",
-    "deploy": "npx prisma migrate deploy"
-  },
-  "prisma": {
-    "schema": "prisma/schema.prisma"
+    "prisma:deploy": "npx prisma migrate deploy"
   },
   "author": "",
   "license": "ISC",
