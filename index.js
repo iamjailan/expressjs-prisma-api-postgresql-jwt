@@ -1,11 +1,11 @@
 import express from "express";
-import authRouter from "./src/routes/auth";
-import userRouter from "./src/routes/user";
-import postRouter from "./src/routes/post";
-import taskRouter from "./src/routes/tasks";
-import { handleCheckingAuth } from "./src/middleware/auth";
-import notFound from "./src/middleware/notFount";
-import prisma from "./src/utils/db";
+import authRouter from "./src/routes/auth.ts";
+import userRouter from "./src/routes/user.ts";
+import postRouter from "./src/routes/post.ts";
+import taskRouter from "./src/routes/tasks.ts";
+import { handleCheckingAuth } from "./src/middleware/auth.ts";
+import notFound from "./src/middleware/notFount.ts";
+import prisma from "./src/utils/db.ts";
 
 const app = express();
 
