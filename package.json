@@ -10,7 +10,12 @@
     "prisma:generate": "npx prisma generate",
     "studio": "npx prisma studio",
     "prisma:show": "npx prisma migrate status",
-    "prisma:deploy": "npx prisma migrate deploy"
+    "prisma:deploy": "npx prisma migrate deploy",
+    "generate": "npx prisma generate",
+    "deploy": "npx prisma migrate deploy"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   },
   "author": "",
   "license": "ISC",
