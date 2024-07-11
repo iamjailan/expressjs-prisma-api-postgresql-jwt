@@ -5,7 +5,8 @@
     "module": "commonjs",
     "target": "es6",
     "strict": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "experimentalDecorators": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
