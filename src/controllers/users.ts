@@ -85,7 +85,6 @@ export const updateUser = async (req, res: Response) => {
   const updateData = new UpdateUserValidator();
   const {
     last_name,
-    password,
     user_name,
     email,
     image,
@@ -97,7 +96,6 @@ export const updateUser = async (req, res: Response) => {
   const userId = req.user.id;
 
   updateData.last_name = last_name;
-  updateData.password = password;
   updateData.user_name = user_name;
   updateData.email = email;
   updateData.image = image;
@@ -128,7 +126,6 @@ export const updateUser = async (req, res: Response) => {
       where: { id: userId },
       data: {
         last_name: last_name,
-        // password: hashedPassword,
         user_name: user_name,
         email: email,
         image: image,

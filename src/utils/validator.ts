@@ -22,10 +22,6 @@ export class UpdateUserValidator {
   last_name?: string;
 
   @IsOptional()
-  @IsString()
-  password?: string;
-
-  @IsOptional()
   @IsEmail()
   email?: string;
 
@@ -48,4 +44,38 @@ export class UpdateUserValidator {
   @IsOptional()
   @IsNumber()
   age?: number;
+}
+
+export class CreateUser {
+  @IsString()
+  user_name: string;
+
+  @IsString()
+  last_name: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsOptional()
+  @IsString()
+  image?: string;
+
+  @IsOptional()
+  @IsEnum(Gender)
+  gender: Gender;
+
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsNumber()
+  age?: number;
+
+  @IsString()
+  password: string;
 }

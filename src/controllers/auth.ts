@@ -2,6 +2,8 @@ import prisma from "../utils/db";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import { CreateUser } from "../utils/validator";
+import { validateOrReject } from "class-validator";
 
 export const handleLogin = async (req, res: Response) => {
   let statusCode = 400;
@@ -48,6 +50,7 @@ export const handleLogin = async (req, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
+  const createData = new CreateUser();
   const {
     user_name,
     last_name,
@@ -58,14 +61,21 @@ export const createUser = async (req: Request, res: Response) => {
     gender,
     city,
     country,
-  } = req.body;
+  }: CreateUser = req.body;
+
+  createData.last_name = last_name;
+  createData.user_name = user_name;
+  createData.email = email;
+  createData.image = image;
+  createData.age = age;
+  createData.gender = gender;
+  createData.city = city;
+  createData.country = country;
+  createData.password = password;
   let errorCode = 400;
   try {
-    if (!user_name || !last_name || !password || !email) {
-      throw new Error(
-        "Please provide the name, last name, email, and password to create a user"
-      );
-    }
+    await validateOrReject(createData);
+
     const userEmail = await prisma.users.findUnique({
       where: { email: email },
     });
@@ -110,6 +120,11 @@ export const createUser = async (req: Request, res: Response) => {
       token: token,
     });
   } catch (error) {
-    res.status(errorCode).json({ success: false, message: error.message });
+    res
+      .status(errorCode)
+      .json({
+        success: false,
+        message: error.message || error.map((item) => item.constraints),
+      });
   }
 };
