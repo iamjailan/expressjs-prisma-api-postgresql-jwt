@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../utils/db";
 import createObjectFromArray from "../utils/createObjectFromArray";
+import { createPrismaSelect } from "../utils/createFields";
 
 export const getAllPost = async (req, res: Response) => {
   const limit = req.query.limit ? Number(req.query.limit) : 10;
@@ -15,18 +16,25 @@ export const getAllPost = async (req, res: Response) => {
     "images",
     "createdAt",
     "updatedAt",
+    "Users.id",
+    "Users.createdAt",
+    "Users.updatedAt",
+    "Users.user_name",
+    "Users.last_name",
+    "Users.image",
   ];
 
   try {
     if (!fields.includes(order_by)) {
       throw new Error(`${order_by} fields does not exit in table`);
     }
+
     const [posts, count] = await prisma.$transaction([
       prisma.post.findMany({
         take: limit,
         skip: offset * limit,
         orderBy: createObjectFromArray([order_by], sort_by),
-        select: createObjectFromArray(fields),
+        select: createPrismaSelect(fields),
       }),
 
       prisma.post.count(),
@@ -100,23 +108,38 @@ export const getPostByUser = async (req, res: Response) => {
 
 export const getPostById = async (req: Request, res: Response) => {
   const postId = req.params.id;
+  // @ts-ignore
+  const userId = req.user.id;
+
   let statusCode = 400;
+  const fields = [
+    "id",
+    "updatedAt",
+    "createdAt",
+    "title",
+    "description",
+    "images",
+    "Users.id",
+    "Users.createdAt",
+    "Users.updatedAt",
+    "Users.user_name",
+    "Users.last_name",
+    "Users.gender",
+    "Users.age",
+  ];
 
   try {
-    const post = await prisma.post.findUnique({ where: { id: postId } });
+    const post = await prisma.post.findUnique({
+      where: { id: postId, usersId: userId },
+    });
 
     if (!post) {
       statusCode = 404;
       throw new Error(`Post not found with id:${postId}`);
     }
-    const postUser = await prisma.users.findUnique({
-      where: { id: post.usersId },
-      select: {
-        age: true,
-        user_name: true,
-        id: true,
-        email: true,
-      },
+    const postUser = await prisma.post.findUnique({
+      where: { id: postId },
+      select: createPrismaSelect(fields),
     });
 
     res.status(200).json({ success: true, data: postUser });

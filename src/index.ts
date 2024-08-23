@@ -5,9 +5,10 @@ import postRouter from "./routes/post";
 import taskRouter from "./routes/tasks";
 import { handleCheckingAuth } from "./middleware/auth";
 import notFound from "./middleware/notFount";
-import prisma from "./utils/db";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.status(200).json({ data: "Welcome to Express API with Prisma ORM!" });

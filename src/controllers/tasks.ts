@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../utils/db";
 import createObjectFromArray from "../utils/createObjectFromArray";
+import { createPrismaSelect } from "../utils/createFields";
 
 export const getAllTasks = async (req, res: Response) => {
   const limit: number = req.query.limit ? parseInt(req.query.limit) : 10;
@@ -9,11 +10,19 @@ export const getAllTasks = async (req, res: Response) => {
   const sort_by: "asc" | "desc" = req.query.sort_by ? req.query.sort_by : "asc";
   const fields: string[] = [
     "id",
+    "createdAt",
     "status",
     "title",
     "description",
     "deadline",
-    "createdAt",
+    "User.createdAt",
+    "User.updatedAt",
+    "User.id",
+    "User.user_name",
+    "User.last_name",
+    "User.age",
+    "User.image",
+    "User.image",
   ];
   let errorCode = 400;
   try {
@@ -23,7 +32,7 @@ export const getAllTasks = async (req, res: Response) => {
     }
     const [allTasks, count] = await prisma.$transaction([
       prisma.tasks.findMany({
-        select: createObjectFromArray(fields),
+        select: createPrismaSelect(fields),
         skip: offset * limit,
         take: limit,
         orderBy: createObjectFromArray([orderBy], sort_by),
