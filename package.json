@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "scripts": {
     "postinstall": "prisma generate",
-    "build": "tsc",
+    "build": "prisma generate && prisma migrate deploy && tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "prisma:migrate": "npx prisma migrate dev --name",
